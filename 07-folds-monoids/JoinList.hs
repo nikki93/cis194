@@ -56,7 +56,6 @@ instance Buffer (JoinList (Score, Size) String) where
   toString (Single _ a) = a
   toString (Append _ j k) = toString j ++ toString k
 
-  -- this isn't very balanced...
   fromString = fromLines . lines
                where fromLines [] = Empty
                      fromLines ls = l +++ Single (scoreString m, 1) m +++ r

@@ -1,8 +1,13 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 module JoinList where
 
 import Data.Monoid
 
 import Sized
+import Scrabble
+import Buffer
+import Editor
 
 data JoinList m a = Empty
                   | Single m a
@@ -43,4 +48,28 @@ takeJ n (Append _ j k) | n < sj = takeJ n j
                        | otherwise = j +++ takeJ (n - sj) k
                        where sj = getSize (size $ tag j)
 
+scoreLine :: String -> JoinList Score String
+scoreLine s = Single (scoreString s) s
+
+instance Buffer (JoinList (Score, Size) String) where
+  toString Empty = ""
+  toString (Single _ a) = a
+  toString (Append _ j k) = toString j ++ toString k
+
+  -- this isn't very balanced...
+  fromString = foldr (\s l -> Single (scoreString s, 1) s +++ l) Empty . lines
+
+  line = indexJ
+
+  replaceLine n l b = takeJ n b +++ fromString l +++ dropJ (n + 1) b
+
+  numLines = getSize . snd . tag
+  value = getScore . fst . tag
+
+main = runEditor editor $ (fromString $ unlines
+         [ "This buffer is for notes you don't want to save, and for"
+         , "evaluation of steam valve coefficients."
+         , "To load a different file, type the character L followed"
+         , "by the name of the file."
+         ] :: JoinList (Score, Size) String)
 

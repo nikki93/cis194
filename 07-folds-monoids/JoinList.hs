@@ -57,7 +57,13 @@ instance Buffer (JoinList (Score, Size) String) where
   toString (Append _ j k) = toString j ++ toString k
 
   -- this isn't very balanced...
-  fromString = foldr (\s l -> Single (scoreString s, 1) s +++ l) Empty . lines
+  fromString = fromLines . lines
+               where fromLines [] = Empty
+                     fromLines ls = l +++ Single (scoreString m, 1) m +++ r
+                                    where l = fromLines $ take hn ls
+                                          r = fromLines $ drop (hn + 1) ls
+                                          m = ls !! hn
+                                          hn = length ls `div` 2
 
   line = indexJ
 

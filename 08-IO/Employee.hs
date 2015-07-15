@@ -1,6 +1,7 @@
 module Employee where
 
-import           Data.Tree
+import Data.Tree
+import Data.List
 
 -- Employee names are represented by Strings.
 type Name = String
@@ -72,4 +73,11 @@ nextLevel b cs = (,) (glCons b $ mconcat $ map snd cs)
 
 maxFun :: Tree Employee -> GuestList
 maxFun company = uncurry moreFun $ treeFold nextLevel company
+
+glFormat :: GuestList -> String
+glFormat (GL es f) = "Total fun: " ++ (show f) ++ "\n"
+                     ++ unlines (sort (map empName es))
+
+main :: IO ()
+main = readFile "company.txt" >>= (putStr . glFormat . maxFun . read)
 

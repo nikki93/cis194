@@ -67,9 +67,8 @@ treeFold :: (a -> [b] -> b) -> Tree a -> b
 treeFold f (Node v cs) = f v $ map (treeFold f) cs
 
 nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
-nextLevel b cs = (with, without)
-                 where with = glCons b $ mconcat $ map snd cs
-                       without = mconcat $ map (uncurry moreFun) cs
+nextLevel b cs = (,) (glCons b $ mconcat $ map snd cs)
+                     (mconcat $ map (uncurry moreFun) cs)
 
 maxFun :: Tree Employee -> GuestList
 maxFun company = uncurry moreFun $ treeFold nextLevel company

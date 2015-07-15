@@ -75,9 +75,9 @@ maxFun :: Tree Employee -> GuestList
 maxFun company = uncurry moreFun $ treeFold nextLevel company
 
 glFormat :: GuestList -> String
-glFormat (GL es f) = "Total fun: " ++ (show f) ++ "\n"
-                     ++ unlines (sort (map empName es))
+glFormat (GL es f) = "Total fun: " ++ show f ++ "\n"
+                     ++ unlines (sort $ map empName es)
 
 main :: IO ()
-main = readFile "company.txt" >>= (putStr . glFormat . maxFun . read)
+main = readFile "company.txt" >>= putStr . glFormat . maxFun . read
 

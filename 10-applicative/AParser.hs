@@ -76,3 +76,11 @@ abParser_ = curry (const ()) <$> char 'a' <*> char 'b'
 intPair :: Parser [Integer]
 intPair = (\m _ n -> [m, n]) <$> posInt <*> char ' ' <*> posInt
 
+instance Alternative Parser where
+  empty = Parser $ const Nothing
+  p1 <|> p2 = Parser $ \s -> runParser p1 s <|> runParser p2 s
+
+intOrUppercase :: Parser ()
+intOrUppercase = (const () <$> posInt) <|> (const () <$> satisfy isUpper)
+
+

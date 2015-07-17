@@ -67,3 +67,12 @@ instance Applicative Parser where
     Nothing -> Nothing
     Just (f, s') -> runParser (f <$> p2) s'
 
+abParser :: Parser (Char, Char)
+abParser = (,) <$> char 'a' <*> char 'b'
+
+abParser_ :: Parser ()
+abParser_ = curry (const ()) <$> char 'a' <*> char 'b'
+
+intPair :: Parser [Integer]
+intPair = (\m _ n -> [m, n]) <$> posInt <*> char ' ' <*> posInt
+

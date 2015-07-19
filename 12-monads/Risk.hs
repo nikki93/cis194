@@ -51,6 +51,6 @@ successProb :: Battlefield -> Rand StdGen Double
 successProb b =
   -- I was in an airport without internet and I couldn't figure out how to
   -- convert Int to Double, so I'm using this hack...
-  liftM ((* 0.001) . sum . map (const 1) . filter ((== 0) . defenders))
+  liftM ((* 0.001) . fromIntegral . length . filter ((== 0) . defenders))
     $ replicateM 1000 $ invade b
 
